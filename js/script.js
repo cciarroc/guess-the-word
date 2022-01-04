@@ -26,7 +26,7 @@ const placeholder = function (word){
     //    console.log(letter);
        placeholderCircles.push("●");
    }
-   wordInProgress.innerText = placeholderCircles.join(" ");
+   wordInProgress.innerText = placeholderCircles.join("");
 }
 
 placeholder (word);
@@ -55,11 +55,47 @@ const inputValidation = function(guessedLetter){
 }
 
 const makeGuess = function(guessedLetter){
-    guessedLetter.toUpperCase();
-    if (guessedLetterArray.includes(guessedLetter)){
+    guess = guessedLetter.toUpperCase();
+    if (guessedLetterArray.includes(guess)){
         guessingMessages.innerText = "Guess a different letter";
     } else {
-        guessedLetterArray.push(guessedLetter);
+        guessedLetterArray.push(guess);
+        showGuessedLetters();
+        wordUpdate(guessedLetterArray);
     }
     console.log(guessedLetterArray);
+}
+
+const showGuessedLetters = function(){
+    guessedLetters.innerHTML = "";
+    for (const letter of guessedLetterArray){
+        let listItem = document.createElement("li");
+        listItem.innerText = letter;
+        guessedLetters.append(listItem);
+    }
+}
+//Can this be tweaked so only incorrect leters show here?
+
+
+const wordUpdate = function(guessedLetterArray){
+    const wordUpper = word.toUpperCase();
+    const wordArray = wordUpper.split("")
+    const correctLetters = [];
+    for (const letter of wordArray){
+        if (guessedLetterArray.includes(letter)){
+            correctLetters.push(letter.toUpperCase());
+        } else {
+            correctLetters.push("●");
+        }
+    }
+    // console.log(correctLetters);
+    wordInProgress.innerText = correctLetters.join("");
+    checkForWinner();
+}
+
+const checkForWinner = function(){
+    if (word.toUpperCase() === wordInProgress.innerText){
+        guessingMessages.classList.add("win");
+        guessingMessages.innerHTML = `<p class="highlight">You win!</p>`
+    }
 }
